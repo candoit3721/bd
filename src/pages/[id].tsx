@@ -370,7 +370,7 @@ export default function InvitationPage() {
 
             {/* Confirmation Messages */}
             {rsvpStatus && !editingResponse && (
-              <div>formatAddress
+              <div>
                 {rsvpStatus === 'ACCEPTED' ? (
                   <div className="confirmation yes">
                     <i className="fas fa-check-circle"></i>

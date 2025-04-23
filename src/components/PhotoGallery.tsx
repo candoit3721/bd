@@ -204,12 +204,13 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
           }}
         >
           <div className="relative w-full h-full flex items-center justify-center p-4">
-            {/* Previous button - always visible on desktop, hidden on mobile */}
+            {/* Previous button - explicitly visible on all screens */}
             <button
               onClick={handlePrevImage}
               className="absolute left-2 text-white hover:text-gray-300 z-50 p-2
-                       bg-black bg-opacity-50 rounded-full md:flex hidden
-                       transition-transform duration-200 hover:scale-110"
+                       bg-black bg-opacity-50 rounded-full flex items-center justify-center
+                       transition-transform duration-200 hover:scale-110
+                       sm:flex xs:flex block" // Explicitly show on all screens
             >
               <i className="fas fa-chevron-left text-xl"></i>
             </button>
@@ -236,12 +237,13 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
               />
             </div>
 
-            {/* Next button - always visible on desktop, hidden on mobile */}
+            {/* Next button - explicitly visible on all screens */}
             <button
               onClick={handleNextImage}
               className="absolute right-2 text-white hover:text-gray-300 z-50 p-2
-                       bg-black bg-opacity-50 rounded-full md:flex hidden
-                       transition-transform duration-200 hover:scale-110"
+                       bg-black bg-opacity-50 rounded-full flex items-center justify-center
+                       transition-transform duration-200 hover:scale-110
+                       sm:flex xs:flex block" // Explicitly show on all screens
             >
               <i className="fas fa-chevron-right text-xl"></i>
             </button>

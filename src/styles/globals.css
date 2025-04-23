@@ -462,11 +462,11 @@ body {
 }
 
 /* Hide navigation buttons on mobile but show on desktop */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .photo-gallery-section .nav-buttons {
     display: none;
   }
-}
+} */
 
 /* Prevent text selection during swipe */
 .photo-gallery-section {

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#FF6B6B" transform="translate(20, 30) rotate(45)" x="15" y="25" width="10" height="10"></rect>
+        <rect fill="#74B9FF" transform="translate(40, 20) rotate(30)" x="35" y="15" width="10" height="10"></rect>
+        <rect fill="#FDCB6E" transform="translate(60, 40) rotate(60)" x="55" y="35" width="10" height="10"></rect>
+        <rect fill="#55EFC4" transform="translate(80, 30) rotate(15)" x="75" y="25" width="10" height="10"></rect>
+        <rect fill="#A29BFE" transform="translate(100, 50) rotate(75)" x="95" y="45" width="10" height="10"></rect>
+        <rect fill="#FF79C6" transform="translate(120, 40) rotate(20)" x="115" y="35" width="10" height="10"></rect>
+        <rect fill="#FD79A8" transform="translate(140, 60) rotate(50)" x="135" y="55" width="10" height="10"></rect>
+        <rect fill="#00B894" transform="translate(160, 50) rotate(35)" x="155" y="45" width="10" height="10"></rect>
+        <rect fill="#0984E3" transform="translate(30, 80) rotate(25)" x="25" y="75" width="10" height="10"></rect>
+        <rect fill="#6C5CE7" transform="translate(50, 70) rotate(55)" x="45" y="65" width="10" height="10"></rect>
+        <rect fill="#FFEAA7" transform="translate(70, 90) rotate(40)" x="65" y="85" width="10" height="10"></rect>
+        <rect fill="#E17055" transform="translate(90, 80) rotate(65)" x="85" y="75" width="10" height="10"></rect>
+        <rect fill="#00CEC9" transform="translate(110, 100) rotate(10)" x="105" y="95" width="10" height="10"></rect>
+        <rect fill="#FDCB6E" transform="translate(130, 90) rotate(70)" x="125" y="85" width="10" height="10"></rect>
+        <rect fill="#FF6B6B" transform="translate(150, 110) rotate(5)" x="145" y="105" width="10" height="10"></rect>
+        <rect fill="#74B9FF" transform="translate(40, 130) rotate(45)" x="35" y="125" width="10" height="10"></rect>
+        <rect fill="#A29BFE" transform="translate(60, 120) rotate(30)" x="55" y="115" width="10" height="10"></rect>
+        <rect fill="#55EFC4" transform="translate(80, 140) rotate(60)" x="75" y="135" width="10" height="10"></rect>
+        <rect fill="#FF79C6" transform="translate(100, 130) rotate(15)" x="95" y="125" width="10" height="10"></rect>
+        <rect fill="#FDCB6E" transform="translate(120, 150) rotate(75)" x="115" y="145" width="10" height="10"></rect>
+        <rect fill="#0984E3" transform="translate(140, 140) rotate(20)" x="135" y="135" width="10" height="10"></rect>
+    </g>
+</svg>

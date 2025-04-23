@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophia's 10th Birthday Party - RSVP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka+One&display=swap');
+        
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f0ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Decorative elements */
+        .decoration {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.5;
+            z-index: -1;
+            animation: float 5s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        
+        /* Card container */
+        .card {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            animation: appear 0.6s ease-out forwards;
+            margin-bottom: 30px;
+        }
+        
+        @keyframes appear {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #9733EE, #FF4E9D);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .party-emoji {
+            position: absolute;
+            top: 15px;
+            font-size: 28px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .party-emoji.left {
+            left: 20px;
+            animation-delay: 0.3s;
+        }
+        
+        .party-emoji.right {
+            right: 20px;
+            animation-delay: 0.6s;
+        }
+        
+        .header h1 {
+            font-family: 'Fredoka One', cursive;
+            color: white;
+            font-size: 32px;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* Content */
+        .content {
+            padding: 30px 25px;
+        }
+        
+        .greeting {
+            text-align: center;
+            margin-bottom: 25px;
+            animation: fadeIn 0.8s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        
+        .greeting h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .greeting h2 .name {
+            color: #FF4E9D;
+            font-weight: 700;
+        }
+        
+        .greeting p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        /* Date banner */
+        .date-banner {
+            background-color: rgba(151, 51, 238, 0.08);
+            padding: 12px 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            animation: fadeIn 0.8s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+        
+        .date-banner i {
+            color: #9733EE;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .date-banner p {
+            color: #444;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        /* Party details section */
+        .party-details {
+            background-color: #f9f4ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 25px 0;
+            animation: fadeIn 0.8s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+        
+        .party-details h3 {
+            color: #9733EE;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .party-details h3 i {
+            margin-right: 8px;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-item i {
+            color: #FF4E9D;
+            margin-right: 10px;
+            font-size: 16px;
+            margin-top: 3px;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .detail-item .detail-text {
+            flex: 1;
+        }
+        
+        .detail-item .detail-text strong {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        
+        .detail-item .detail-text span {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .map-link {
+            display: inline-block;
+            margin-top: 5px;
+            color: #9733EE;
+            font-size: 13px;
+            text-decoration: none;
+        }
+        
+        .map-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Confirmation message */
+        .confirmation {
+            margin: 25px 0;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+            animation: scaleIn 0.5s ease-out forwards;
+        }
+        
+        @keyframes scaleIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .confirmation.yes {
+            background-color: rgba(255, 78, 157, 0.1);
+            border: 1px solid rgba(255, 78, 157, 0.2);
+        }
+        
+        .confirmation.no {
+            background-color: rgba(151, 51, 238, 0.1);
+            border: 1px solid rgba(151, 51, 238, 0.2);
+        }
+        
+        .confirmation p {
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .confirmation p.secondary {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .confirmation i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .confirmation.yes i {
+            color: #FF4E9D;
+        }
+        
+        .confirmation.no i {
+            color: #9733EE;
+        }
+        
+        /* RSVP section */
+        .rsvp {
+            margin-top: 25px;
+            animation: fadeIn 0.8s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+        
+        .rsvp h3 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-yes {
+            background: linear-gradient(135deg, #9733EE, #FF4E9D);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 78, 157, 0.25);
+        }
+        
+        .btn-yes:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(255, 78, 157, 0.3);
+        }
+        
+        .btn-no {
+            background-color: white;
+            color: #555;
+            border: 2px solid #eee;
+        }
+        
+        .btn-no:hover {
+            background-color: #f8f8f8;
+            transform: translateY(-3px);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        /* Photo gallery */
+        .gallery {
+            margin: 25px 0;
+            animation: fadeIn 0.8s ease-out 0.7s forwards;
+            opacity: 0;
+        }
+        
+        .gallery h3 {
+            color: #9733EE;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .gallery h3 i {
+            margin-right: 8px;
+        }
+        
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .photo-item {
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            position: relative;
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 24px;
+            background-color: #f8f8f8;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #f0f0f0;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: #9733EE;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Fireworks animation */
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            z-index: 999;
+            pointer-events: none;
+        }
+        
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+        
+        /* Confetti animation */
+        .confetti-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 999;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .card {
+                max-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .greeting h2 {
+                font-size: 22px;
+            }
+            
+            .photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative elements -->
+    <div class="decoration" style="top: 15%; left: 5%; animation-delay: 0.5s;">🎂</div>
+    <div class="decoration" style="top: 25%; right: 7%; animation-delay: 1.2s;">✨</div>
+    <div class="decoration" style="bottom: 20%; left: 10%; animation-delay: 2.3s;">🎁</div>
+    <div class="decoration" style="bottom: 30%; right: 15%; animation-delay: 1.8s;">🎈</div>
+    <div class="decoration" style="top: 45%; left: 15%; animation-delay: 3.1s;">🎊</div>
+    <div class="decoration" style="top: 60%; right: 10%; animation-delay: 2.5s;">🎪</div>
+    
+    <!-- Fireworks container -->
+    <div id="fireworks-container"></div>
+    
+    <!-- Confetti container -->
+    <div class="confetti-container" id="confetti-container"></div>
+    
+    <!-- Main card -->
+    <div class="card">
+        <div class="header">
+            <div class="party-emoji left">🎉</div>
+            <div class="party-emoji right">🎊</div>
+            <h1>Sophia's 10th Birthday!</h1>
+            <p>Join us for a fun celebration!</p>
+        </div>
+        
+        <div class="content">
+            <!-- 1. Greeting -->
+            <div class="greeting">
+                <h2>Hi <span class="name" id="guestName">Friend</span>!</h2>
+                <p>You're invited to Sophia's birthday party at SkyZone!</p>
+            </div>
+            
+            <!-- 2. Time -->
+            <div class="date-banner">
+                <i class="fas fa-calendar-alt"></i>
+                <p>Saturday, May 10th • 2:00 PM - 4:30 PM</p>
+            </div>
+            
+            <!-- 3. Party Details -->
+            <div class="party-details">
+                <h3><i class="fas fa-info-circle"></i> Party Details</h3>
+                
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="detail-text">
+                        <strong>Location</strong>
+                        <span>SkyZone Trampoline Park</span>
+                        <span>1234 Jump Street, Springfield, IL 62701</span>
+                        <a href="https://maps.google.com" target="_blank" class="map-link">
+                            <i class="fas fa-directions"></i> Get Directions
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <i class="fas fa-tshirt"></i>
+                    <div class="detail-text">
+                        <strong>What to Bring</strong>
+                        <span>SkyZone socks (or you can purchase there)</span>
+                        <span>Comfortable clothing for jumping</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 4. Confirmation Messages (Initially Hidden) -->
+            <div class="confirmation yes" id="confirmYes">
+                <i class="fas fa-birthday-cake"></i>
+                <p>Awesome! We can't wait to see you!</p>
+            </div>
+            
+            <div class="confirmation no" id="confirmNo">
+                <i class="fas fa-envelope"></i>
+                <p>Thanks for letting us know. We'll miss you!</p>
+                <p class="secondary">If you change your mind, just scan the QR code again to update your response.</p>
+            </div>
+            
+            <!-- 5. RSVP Section -->
+            <div class="rsvp">
+                <h3>Will you join us?</h3>
+                <div class="buttons">
+                    <button class="btn btn-yes" id="btnYes">
+                        <i class="fas fa-check-circle"></i>
+                        Yes, I'll be there!
+                    </button>
+                    <button class="btn btn-no" id="btnNo">
+                        <i class="fas fa-times-circle"></i>
+                        Sorry, can't make it
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 6. Photo Gallery (Always visible) -->
+            <div class="gallery" id="photoGallery">
+                <h3><i class="fas fa-images"></i> Photo Gallery</h3>
+                <p>Check out the fun we'll have at SkyZone!</p>
+                
+                <div class="photo-grid">
+                    <!-- Placeholder for photos that will be added later -->
+                    <div class="photo-item">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                    <div class="photo-item">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                    <div class="photo-item">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                    <div class="photo-item">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                    <div class="photo-item">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                    <div class="photo-item">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Questions? Contact Sophia's parents at <a href="mailto:henry215@gmail.com">henry215@gmail.com</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Parse URL parameters to get guest information
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                name: params.get('name') || 'Friend',
+                id: params.get('id') || '1234'
+            };
+        }
+        
+        // Update guest name in the greeting
+        function updateGreeting() {
+            const { name } = getUrlParams();
+            document.getElementById('guestName').textContent = name;
+        }
+        
+        // Create fireworks effect
+        function createFireworks() {
+            const container = document.getElementById('fireworks-container');
+            const colors = ['#FF4E9D', '#9733EE', '#FFD700', '#4FB3FF', '#64f38c'];
+            const fireworkCount = 5;
+            
+            for (let i = 0; i < fireworkCount; i++) {
+                setTimeout(() => {
+                    launchFirework(container, colors);
+                }, i * 300);
+            }
+        }
+        
+        function launchFirework(container, colors) {
+            // Create launch position (center bottom of screen)
+            const x = window.innerWidth / 2 + (Math.random() * 200 - 100);
+            const y = window.innerHeight * 0.8;
+            
+            // Create explosion position (somewhere in the top half)
+            const explodeX = x + (Math.random() * 100 - 50);
+            const explodeY = window.innerHeight * 0.2 + (Math.random() * 200);
+            
+            // Create rocket trail
+            const rocket = document.createElement('div');
+            rocket.style.position = 'fixed';
+            rocket.style.width = '3px';
+            rocket.style.height = '3px';
+            rocket.style.backgroundColor = '#fff';
+            rocket.style.borderRadius = '50%';
+            rocket.style.left = `${x}px`;
+            rocket.style.top = `${y}px`;
+            rocket.style.boxShadow = '0 0 6px 2px white';
+            rocket.style.zIndex = '9999';
+            rocket.style.pointerEvents = 'none';
+            
+            container.appendChild(rocket);
+            
+            // Animate rocket up
+            const duration = 700 + Math.random() * 300;
+            rocket.animate([
+                { top: `${y}px`, opacity: 1 },
+                { top: `${explodeY}px`, opacity: 0.8 }
+            ], {
+                duration: duration,
+                easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)'
+            });
+            
+            // Explosion
+            setTimeout(() => {
+                rocket.remove();
+                createExplosion(container, explodeX, explodeY, colors);
+            }, duration);
+        }
+        
+        function createExplosion(container, x, y, colors) {
+            const particleCount = 40 + Math.floor(Math.random() * 30);
+            const explosionColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework';
+                
+                // Random trajectory for each particle
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 30 + Math.random() * 70;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.backgroundColor = explosionColor;
+                particle.style.boxShadow = `0 0 4px 2px ${explosionColor}`;
+                
+                container.appendChild(particle);
+                
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0.1)`, opacity: 0 }
+                ], {
+                    duration: 800 + Math.random() * 400,
+                    easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)'
+                });
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 1200);
+            }
+        }
+        
+        // Create confetti effect
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#9733EE', '#FF4E9D', '#FFD700', '#4FB3FF', '#64f38c'];
+            const shapes = ['circle', 'square'];
+            const confettiCount = 150;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                    
+                    confetti.className = 'confetti';
+                    
+                    if (shape === 'circle') {
+                        confetti.style.borderRadius = '50%';
+                    }
+                    
+                    confetti.style.backgroundColor = color;
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.width = `${5 + Math.random() * 5}px`;
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.opacity = '1';
+                    confetti.style.animation = `confetti-fall ${3 + Math.random() * 2}s ease-out forwards`;
+                    
+                    container.appendChild(confetti);
+                    
+                    // Remove confetti after animation completes
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }, i * 20);
+            }
+        }
+        
+        // Handle RSVP buttons
+        function handleRsvp() {
+            const btnYes = document.getElementById('btnYes');
+            const btnNo = document.getElementById('btnNo');
+            const confirmYes = document.getElementById('confirmYes');
+            const confirmNo = document.getElementById('confirmNo');
+            
+            btnYes.addEventListener('click', () => {
+                // Show confirmation
+                confirmYes.style.display = 'block';
+                
+                // Disable buttons
+                btnYes.disabled = true;
+                btnNo.disabled = true;
+                btnYes.style.opacity = '0.7';
+                btnNo.style.opacity = '0.5';
+                
+                // Create fireworks effect
+                createFireworks();
+                
+                // Create confetti effect
+                createConfetti();
+                
+                // Send response to server (simulate)
+                sendResponse(true);
+            });
+            
+            btnNo.addEventListener('click', () => {
+                // Show confirmation
+                confirmNo.style.display = 'block';
+                
+                // Disable buttons
+                btnYes.disabled = true;
+                btnNo.disabled = true;
+                btnYes.style.opacity = '0.5';
+                btnNo.style.opacity = '0.7';
+                
+                // Send response to server (simulate)
+                sendResponse(false);
+            });
+        }
+        
+        // Send response to server (simulated)
+        function sendResponse(attending) {
+            const { name, id } = getUrlParams();
+            console.log(`RSVP from ${name} (ID: ${id}): ${attending ? 'Attending' : 'Not attending'}`);
+            // In a real implementation, this would send data to your server
+        }
+        
+        // Function to load real photos (to be implemented later)
+        function loadPhotos() {
+            // This function will be used when you're ready to add real photos
+            // The current implementation uses placeholders
+            
+            // Example implementation:
+            // const photoItems = document.querySelectorAll('.photo-item');
+            // photoItems.forEach((item, index) => {
+            //     const img = document.createElement('img');
+            //     img.src = `path/to/photo-${index+1}.jpg`;
+            //     img.alt = `SkyZone fun photo ${index+1}`;
+            //     item.innerHTML = '';
+            //     item.appendChild(img);
+            // });
+        }
+        
+        // Initialize everything when the document is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            updateGreeting();
+            handleRsvp();
+            // Uncomment when photos are ready:
+            // loadPhotos();
+        });
+    </script>
+</body>
+</html>

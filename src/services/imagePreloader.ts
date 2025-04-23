@@ -24,7 +24,8 @@ export class ImagePreloader {
   }
 
   isLoaded(src: string): boolean {
-    return this.cache.has(src) && this.cache.get(src)?.complete;
+    const cachedImage = this.cache.get(src);
+    return this.cache.has(src) && (cachedImage?.complete ?? false);
   }
 
   getImage(src: string): HTMLImageElement | undefined {

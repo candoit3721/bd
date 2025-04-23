@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { playfair, montserrat, poppins, quicksand, fredokaOne } from "../components/CustomFonts";
 import { PartyProvider } from "../contexts/PartyContext";
 import { ImagePreloaderProvider } from '../contexts/ImagePreloaderContext';
-import { SKYZONE_IMAGES } from '../components/PhotoGallery';
+import { SKYZONE_IMAGES } from '../constants/images';
 import "../styles/globals.css";
 
 export const metadata: Metadata = {

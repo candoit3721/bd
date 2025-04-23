@@ -1,32 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useImageCache } from '../hooks/useImageCache';
 import { useRandomImages } from '../hooks/useRandomImages';
 import { useImagePreloader } from '../contexts/ImagePreloaderContext';
-
-const SKYZONE_IMAGES = [
-  'https://www.skyzone.com/wp-content/uploads/2022/09/about_hero.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2024/04/Sky-Zone-Ways-To-Play.webp',
-  'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/a5/cb/6b/ninja-warrior-course.jpg?w=900&h=500&s=1',
-  'https://www.utahsadventurefamily.com/wp-content/uploads/2024/10/Sky-Zone-1-scaled.jpg',
-  'https://www.utahsadventurefamily.com/wp-content/uploads/2024/10/Sky-Zone-4-600x400.jpg',
-  'https://evanstonroundtable.com/wp-content/uploads/2024/01/IMG_7721-1-scaled-e1705789552245.jpg',
-  // Add more SkyZone images here...
-  'https://www.skyzone.com/wp-content/uploads/2023/05/SZ_tickets_card_1-e1684266882819.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/DSC07291-e1682542947247.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2022/10/battle_beam-e1666684372567.jpeg',
-  'https://www.skyzone.com/wp-content/uploads/2022/11/attraction-stuntbag-card.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/KWP_9283-Edit_lr-e1680884438990.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/BMS02483-scaled-e1681334000772.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/SkyZone-101921-5683-copy.png',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/Skyzone-Square-format-31-of-56-scaled-e1681764882592.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2022/10/fundraising_hero.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/Plan-an-Amazing-Event-with-Us-2.png',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/Skyzone-Square-format-25-of-56-scaled.jpg',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/park_slider_02-2.png',
-  'https://www.skyzone.com/wp-content/uploads/2023/05/iWall-Games-1.png'  
-];
+import { SKYZONE_IMAGES } from '../constants/images';
 
 const PhotoGallery: React.FC = () => {
   const randomImages = useRandomImages(SKYZONE_IMAGES, 6) || [];

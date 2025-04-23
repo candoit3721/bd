@@ -28,11 +28,27 @@ module.exports = {
       },
       animation: {
         'float': 'float 5s ease-in-out infinite',
+        'fade-out': 'fade-out 3s ease-in-out forwards',
+        'slide-left': 'slide-left 0.3s ease-out',
+        'slide-right': 'slide-right 0.3s ease-out',
       },
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
           '50%': { transform: 'translateY(-15px) rotate(5deg)' },
+        },
+        'fade-out': {
+          '0%': { opacity: '1' },
+          '70%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+        'slide-left': {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0)' }
+        },
+        'slide-right': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0)' }
         },
       },
     },

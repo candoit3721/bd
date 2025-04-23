@@ -4,10 +4,15 @@ import React from 'react';
 import { useUI } from '../contexts/UIContext';
 
 const Decorations: React.FC = () => {
-  const { isModalOpen } = useUI();
+  try {
+    const { isModalOpen } = useUI();
 
-  if (isModalOpen) {
-    return null;
+    if (isModalOpen) {
+      return null;
+    }
+  } catch (error) {
+    // If context is not available, render decorations anyway
+    console.warn('UIContext not available, rendering decorations by default');
   }
 
   return (

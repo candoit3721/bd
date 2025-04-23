@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, TouchEvent } from 'react';
 import Image from 'next/image';
 import { SKYZONE_IMAGES } from '../constants/images';
 import { useUI } from '../contexts/UIContext';
@@ -16,7 +16,77 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [modalPosition, setModalPosition] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragDistance, setDragDistance] = useState({ x: 0, y: 0 });
   const { setIsModalOpen } = useUI();
+
+  // Touch handling
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const touchEndY = useRef<number | null>(null);
+  const minSwipeDistance = 50;
+  const minVerticalSwipeDistance = 100;
+
+  const handleTouchStart = (e: TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchEndX.current = null;
+    touchEndY.current = null;
+    setIsDragging(true);
+    setDragDistance({ x: 0, y: 0 });
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!touchStartX.current || !touchStartY.current) return;
+    
+    touchEndX.current = e.touches[0].clientX;
+    touchEndY.current = e.touches[0].clientY;
+    
+    const deltaX = touchEndX.current - touchStartX.current;
+    const deltaY = touchEndY.current - touchStartY.current;
+    
+    setDragDistance({ x: deltaX, y: deltaY });
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    setIsDragging(false);
+    
+    if (!touchStartX.current || !touchEndX.current || 
+        !touchStartY.current || !touchEndY.current) return;
+
+    const swipeDistanceX = touchEndX.current - touchStartX.current;
+    const swipeDistanceY = touchEndY.current - touchStartY.current;
+    
+    // Check if vertical swipe is more prominent
+    if (Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX)) {
+      if (swipeDistanceY > minVerticalSwipeDistance) {
+        handleClose();
+        return;
+      }
+    } else if (Math.abs(swipeDistanceX) >= minSwipeDistance) {
+      if (swipeDistanceX > 0) {
+        // Swiped right
+        setSlideDirection('right');
+        handlePrevImage(e as any);
+      } else {
+        // Swiped left
+        setSlideDirection('left');
+        handleNextImage(e as any);
+      }
+    }
+
+    setDragDistance({ x: 0, y: 0 });
+    touchStartX.current = null;
+    touchStartY.current = null;
+    touchEndX.current = null;
+    touchEndY.current = null;
+  };
+
+  const handleImageTransitionEnd = () => {
+    setSlideDirection(null);
+  };
 
   const handleImageClick = (imageUrl: string, event: React.MouseEvent<HTMLDivElement>) => {
     const index = SKYZONE_IMAGES.indexOf(imageUrl);
@@ -55,19 +125,40 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
     setIsModalOpen(false);
   }, [setIsModalOpen]);
 
-  const handlePrevImage = (e: React.MouseEvent) => {
+  const handlePrevImage = (e: React.MouseEvent | TouchEvent) => {
     e.stopPropagation();
+    setSlideDirection('right');
     const newIndex = (selectedIndex - 1 + SKYZONE_IMAGES.length) % SKYZONE_IMAGES.length;
     setSelectedIndex(newIndex);
     setSelectedImage(SKYZONE_IMAGES[newIndex]);
   };
 
-  const handleNextImage = (e: React.MouseEvent) => {
+  const handleNextImage = (e: React.MouseEvent | TouchEvent) => {
     e.stopPropagation();
+    setSlideDirection('left');
     const newIndex = (selectedIndex + 1) % SKYZONE_IMAGES.length;
     setSelectedIndex(newIndex);
     setSelectedImage(SKYZONE_IMAGES[newIndex]);
   };
+
+  // Keyboard navigation
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (selectedImage) {
+      if (e.key === 'ArrowLeft') {
+        handlePrevImage(e as any);
+      } else if (e.key === 'ArrowRight') {
+        handleNextImage(e as any);
+      } else if (e.key === 'Escape') {
+        handleClose();
+      }
+    }
+  }, [selectedImage, selectedIndex]);
+
+  // Add keyboard event listener
+  React.useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
     <div className="photo-gallery-section p-4">
@@ -97,15 +188,64 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
 
       {selectedImage && (
         <div 
-          className="fixed left-0 right-0 z-50 bg-black md:inset-0 md:flex md:items-center md:justify-center"
+          className={`fixed left-0 right-0 z-50 bg-black md:inset-0 md:flex md:items-center 
+                     md:justify-center transition-opacity duration-300
+                     ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
           onClick={handleClose}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
           style={{
             top: `${modalPosition}px`,
             height: '80vh',
             maxHeight: '80vh',
+            opacity: Math.max(0, 1 - Math.abs(dragDistance.y) / 400),
+            transform: `translateY(${dragDistance.y}px)`,
           }}
         >
           <div className="relative w-full h-full flex items-center justify-center p-4">
+            {/* Previous button - always visible on desktop, hidden on mobile */}
+            <button
+              onClick={handlePrevImage}
+              className="absolute left-2 text-white hover:text-gray-300 z-50 p-2
+                       bg-black bg-opacity-50 rounded-full md:flex hidden
+                       transition-transform duration-200 hover:scale-110"
+            >
+              <i className="fas fa-chevron-left text-xl"></i>
+            </button>
+
+            {/* Image container */}
+            <div 
+              className="relative w-full aspect-[4/3] transition-transform duration-300"
+              style={{
+                transform: `translateX(${dragDistance.x}px)`,
+              }}
+            >
+              <Image
+                src={selectedImage}
+                alt="SkyZone activity"
+                fill
+                className={`object-contain transition-transform duration-300
+                          ${slideDirection === 'left' ? 'animate-slide-left' : ''}
+                          ${slideDirection === 'right' ? 'animate-slide-right' : ''}`}
+                sizes="100vw"
+                priority
+                quality={100}
+                onClick={(e) => e.stopPropagation()}
+                onTransitionEnd={handleImageTransitionEnd}
+              />
+            </div>
+
+            {/* Next button - always visible on desktop, hidden on mobile */}
+            <button
+              onClick={handleNextImage}
+              className="absolute right-2 text-white hover:text-gray-300 z-50 p-2
+                       bg-black bg-opacity-50 rounded-full md:flex hidden
+                       transition-transform duration-200 hover:scale-110"
+            >
+              <i className="fas fa-chevron-right text-xl"></i>
+            </button>
+
             {/* Close button */}
             <button
               onClick={(e) => {
@@ -113,41 +253,10 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
                 handleClose();
               }}
               className="absolute top-2 right-2 text-white hover:text-gray-300 z-50 p-2
-                       bg-black bg-opacity-50 rounded-full"
+                       bg-black bg-opacity-50 rounded-full
+                       transition-transform duration-200 hover:scale-110"
             >
               <i className="fas fa-times text-xl"></i>
-            </button>
-
-            {/* Previous button */}
-            <button
-              onClick={handlePrevImage}
-              className="absolute left-2 text-white hover:text-gray-300 z-50 p-2
-                       bg-black bg-opacity-50 rounded-full"
-            >
-              <i className="fas fa-chevron-left text-xl"></i>
-            </button>
-
-            {/* Image container with maintained aspect ratio */}
-            <div className="relative w-full aspect-[4/3]">
-              <Image
-                src={selectedImage}
-                alt="SkyZone activity"
-                fill
-                className="object-contain"
-                sizes="100vw"
-                priority
-                quality={100}
-                onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-
-            {/* Next button */}
-            <button
-              onClick={handleNextImage}
-              className="absolute right-2 text-white hover:text-gray-300 z-50 p-2
-                       bg-black bg-opacity-50 rounded-full"
-            >
-              <i className="fas fa-chevron-right text-xl"></i>
             </button>
 
             {/* Image counter */}
@@ -156,6 +265,15 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
                        bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm"
             >
               {selectedIndex + 1} / {SKYZONE_IMAGES.length}
+            </div>
+
+            {/* Swipe hint for mobile - show only initially */}
+            <div 
+              className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-white 
+                       bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm md:hidden
+                       animate-fade-out"
+            >
+              Swipe to navigate • Pull down to close
             </div>
           </div>
         </div>

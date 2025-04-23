@@ -10,6 +10,7 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 /* Custom font classes */
@@ -423,14 +424,56 @@ body {
 
 .modal-overlay {
   animation: modalFadeIn 0.3s ease-out;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Prevent scrolling when modal is open */
+.modal-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* Hardware acceleration for smoother animations */
+.photo-gallery-section img {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
 }
 
 .photo-gallery-section img {
   transition: transform 0.2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .photo-gallery-section img:hover {
   transform: scale(1.05);
+}
+
+/* Button hover effects */
+.photo-gallery-section button {
+  transition: all 0.2s ease-out;
+}
+
+.photo-gallery-section button:hover {
+  transform: scale(1.1);
+}
+
+/* Hide navigation buttons on mobile but show on desktop */
+@media (max-width: 768px) {
+  .photo-gallery-section .nav-buttons {
+    display: none;
+  }
+}
+
+/* Prevent text selection during swipe */
+.photo-gallery-section {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 @media (max-width: 640px) {

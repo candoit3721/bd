@@ -1,21 +1,19 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useImageCache } from '../hooks/useImageCache';
-import { useRandomImages } from '../hooks/useRandomImages';
-import { useImagePreloader } from '../contexts/ImagePreloaderContext';
+import Image from 'next/image';
 import { SKYZONE_IMAGES } from '../constants/images';
 
-const PhotoGallery: React.FC = () => {
-  const randomImages = useRandomImages(SKYZONE_IMAGES, 6) || [];
+interface PhotoGalleryProps {}
+
+const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
+  const [randomImages] = useState(() => {
+    const shuffled = [...SKYZONE_IMAGES].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 6);
+  });
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const { isImageLoaded } = useImagePreloader();
-  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-
-  const handleImageLoad = (imageUrl: string) => {
-    setLoadedImages(prev => new Set([...prev, imageUrl]));
-  };
 
   const handleImageClick = (imageUrl: string) => {
     const index = SKYZONE_IMAGES.indexOf(imageUrl);
@@ -51,20 +49,13 @@ const PhotoGallery: React.FC = () => {
             className="relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer bg-gray-200"
             onClick={() => handleImageClick(imageUrl)}
           >
-            {!loadedImages.has(imageUrl) && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-party-purple border-t-transparent rounded-full animate-spin"></div>
-              </div>
-            )}
-            
-            <img
+            <Image
               src={imageUrl}
               alt={`SkyZone activity ${index + 1}`}
-              className={`w-full h-full object-cover transition-opacity duration-300 ${
-                loadedImages.has(imageUrl) ? 'opacity-100' : 'opacity-0'
-              }`}
-              onLoad={() => handleImageLoad(imageUrl)}
-              loading="lazy"
+              fill
+              sizes="(max-width: 768px) 50vw, 33vw"
+              className="object-cover hover:scale-105 transition-transform duration-300"
+              priority={index < 2}
             />
           </div>
         ))}
@@ -93,11 +84,16 @@ const PhotoGallery: React.FC = () => {
               <i className="fas fa-times text-2xl"></i>
             </button>
             
-            <img
-              src={selectedImage}
-              alt="SkyZone activity"
-              className="w-full h-auto object-contain"
-            />
+            <div className="relative aspect-video">
+              <Image
+                src={selectedImage}
+                alt="SkyZone activity"
+                fill
+                className="object-contain"
+                sizes="90vw"
+                priority
+              />
+            </div>
           </div>
 
           <button

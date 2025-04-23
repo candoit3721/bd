@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { SKYZONE_IMAGES } from '../constants/images';
+import { useUI } from '../contexts/UIContext';
 
 interface PhotoGalleryProps {}
 
@@ -15,11 +16,13 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [modalPosition, setModalPosition] = useState(0);
+  const { setIsModalOpen } = useUI();
 
   const handleImageClick = (imageUrl: string, event: React.MouseEvent<HTMLDivElement>) => {
     const index = SKYZONE_IMAGES.indexOf(imageUrl);
     setSelectedIndex(index);
     setSelectedImage(imageUrl);
+    setIsModalOpen(true);
 
     // Calculate modal position based on clicked image
     const clickedElement = event.currentTarget;
@@ -49,7 +52,8 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
 
   const handleClose = useCallback(() => {
     setSelectedImage(null);
-  }, []);
+    setIsModalOpen(false);
+  }, [setIsModalOpen]);
 
   const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { playfair, montserrat, poppins, quicksand, fredokaOne } from "../components/CustomFonts";
 import { PartyProvider } from "../contexts/PartyContext";
 import { ImagePreloaderProvider } from "../contexts/ImagePreloaderContext";
+import { UIProvider } from "../contexts/UIContext";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +23,9 @@ export default function RootLayout({
       <body className="bg-party-cream min-h-screen relative overflow-x-hidden">
         <PartyProvider>
           <ImagePreloaderProvider>
-            {children}
+            <UIProvider>
+              {children}
+            </UIProvider>
           </ImagePreloaderProvider>
         </PartyProvider>
       </body>

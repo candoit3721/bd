@@ -1,8 +1,15 @@
 "use client";
 
 import React from 'react';
+import { useUI } from '../contexts/UIContext';
 
 const Decorations: React.FC = () => {
+  const { isModalOpen } = useUI();
+
+  if (isModalOpen) {
+    return null;
+  }
+
   return (
     <>
       {/* Top section - sparse and light */}

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { playfair, montserrat, poppins, quicksand, fredokaOne } from "../components/CustomFonts";
 import { PartyProvider } from "../contexts/PartyContext";
+import { ImagePreloaderProvider } from '../contexts/ImagePreloaderContext';
+import { SKYZONE_IMAGES } from '../components/PhotoGallery';
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
@@ -20,7 +22,9 @@ export default function RootLayout({
       </head>
       <body className="bg-party-cream min-h-screen relative overflow-x-hidden">
         <PartyProvider>
-          {children}
+          <ImagePreloaderProvider images={SKYZONE_IMAGES}>
+            {children}
+          </ImagePreloaderProvider>
         </PartyProvider>
       </body>
     </html>

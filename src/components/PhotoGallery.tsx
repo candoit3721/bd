@@ -30,6 +30,8 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
   const minVerticalSwipeDistance = 100;
 
   const handleTouchStart = (e: TouchEvent) => {
+    // Prevent default touch behavior to stop scrolling
+    e.preventDefault();
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     touchEndX.current = null;
@@ -39,6 +41,8 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
   };
 
   const handleTouchMove = (e: TouchEvent) => {
+    // Prevent default touch behavior to stop scrolling
+    e.preventDefault();
     if (!touchStartX.current || !touchStartY.current) return;
     
     touchEndX.current = e.touches[0].clientX;
@@ -47,7 +51,12 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
     const deltaX = touchEndX.current - touchStartX.current;
     const deltaY = touchEndY.current - touchStartY.current;
     
-    setDragDistance({ x: deltaX, y: deltaY });
+    // If the horizontal swipe is more prominent, prevent vertical movement
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      setDragDistance({ x: deltaX, y: 0 });
+    } else {
+      setDragDistance({ x: 0, y: deltaY });
+    }
   };
 
   const handleTouchEnd = (e: TouchEvent) => {
@@ -267,15 +276,6 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
                        bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm"
             >
               {selectedIndex + 1} / {SKYZONE_IMAGES.length}
-            </div>
-
-            {/* Swipe hint for mobile - show only initially */}
-            <div 
-              className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-white 
-                       bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm md:hidden
-                       animate-fade-out"
-            >
-              Swipe to navigate • Pull down to close
             </div>
           </div>
         </div>

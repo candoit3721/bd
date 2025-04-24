@@ -29,7 +29,7 @@ export default function Home() {
             {/* RSVP Section */}
             <div className="rsvp-section">
               <h3 className="rsvp-title">RSVP</h3>
-              <p className="mb-4">Please scan the QR code in your invitation to access your personalized RSVP page!</p>
+              <p className="mb-4">Please scan the QR code on your invitation to access your personalized RSVP page!</p>
               <div className="flex justify-center items-center gap-4 mb-4">
                 <i className="fas fa-mobile-alt text-4xl text-party-purple"></i>
                 <i className="fas fa-arrow-right text-2xl text-gray-400"></i>

@@ -204,6 +204,27 @@ export default function InvitationPage() {
         setShowContactForm(true);
       } else {
         setEditingResponse(false); // Reset editing state after successful update
+
+        // Send email notification for declined RSVPs immediately
+        // For accepted RSVPs, we'll send after contact info is provided or skipped
+        try {
+          console.log('Sending email notification for declined RSVP:', { guestId: id, status });
+          const response = await fetch('/api/send-rsvp-notification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ guestId: id, status })
+          });
+
+          const result = await response.json();
+          console.log('Email notification API response:', result);
+
+          if (!response.ok) {
+            throw new Error(`API returned ${response.status}: ${JSON.stringify(result)}`);
+          }
+        } catch (emailError) {
+          console.error('Error sending email notification:', emailError);
+          // Don't show error to user, continue with RSVP process
+        }
       }
 
       // Set justAccepted flag if the status is ACCEPTED
@@ -253,6 +274,29 @@ export default function InvitationPage() {
       setShowContactForm(false);
       setEditingResponse(false);
       setJustAccepted(true); // Set the flag to show the special confirmation message
+
+      // Send email notification with updated contact info
+      try {
+        console.log('Sending email notification after contact form submission:', { guestId: id, status: 'ACCEPTED' });
+        const response = await fetch('/api/send-rsvp-notification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            guestId: id,
+            status: 'ACCEPTED'
+          })
+        });
+
+        const result = await response.json();
+        console.log('Email notification API response:', result);
+
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}: ${JSON.stringify(result)}`);
+        }
+      } catch (emailError) {
+        console.error('Error sending email notification:', emailError);
+        // Don't show error to user, continue with RSVP process
+      }
     } catch (error) {
       console.error('Error updating contact info:', error);
       alert('There was an error saving your contact information. Please try again.');
@@ -285,6 +329,29 @@ export default function InvitationPage() {
       setEditingResponse(false); // Make sure editing mode is off
       setRsvpStatus('ACCEPTED');
       setJustAccepted(true); // Set the flag to show the special confirmation message
+
+      // Send email notification
+      try {
+        console.log('Sending email notification after skipping contact form:', { guestId: id, status: 'ACCEPTED' });
+        const response = await fetch('/api/send-rsvp-notification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            guestId: id,
+            status: 'ACCEPTED'
+          })
+        });
+
+        const result = await response.json();
+        console.log('Email notification API response:', result);
+
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}: ${JSON.stringify(result)}`);
+        }
+      } catch (emailError) {
+        console.error('Error sending email notification:', emailError);
+        // Don't show error to user, continue with RSVP process
+      }
 
       // Create confetti effect
       setTimeout(() => {

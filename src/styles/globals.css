@@ -285,8 +285,8 @@ body {
   color: #9733EE;
 }
 
-/* Calendar link */
-.calendar-link {
+/* Calendar and Waiver links */
+.calendar-link, .waiver-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -300,14 +300,16 @@ body {
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
 }
 
-.calendar-link:hover {
+.calendar-link:hover, .waiver-link:hover {
   background: rgba(151, 51, 238, 0.05);
   transform: translateY(-2px);
 }
 
-.calendar-link i {
+.calendar-link i, .waiver-link i {
   font-size: 16px;
   color: #FF4E9D;
 }

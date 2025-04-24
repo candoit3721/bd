@@ -24,6 +24,7 @@ interface PartySettings {
   party_date?: string;
   party_time?: string;
   party_end_time?: string;
+  skyzone_waiver_url?: string;
 }
 
 export default function PartySettings() {
@@ -513,6 +514,32 @@ export default function PartySettings() {
                     </div>
 
                     {/* Party year field removed as it's redundant with the date picker */}
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <h2 className="text-lg font-medium text-gray-800 mb-4">SkyZone Waiver</h2>
+
+                  <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <div className="sm:col-span-6">
+                      <label htmlFor="skyzone_waiver_url" className="block text-sm font-medium text-gray-700">
+                        SkyZone Waiver URL
+                      </label>
+                      <div className="mt-1">
+                        <input
+                          type="url"
+                          name="skyzone_waiver_url"
+                          id="skyzone_waiver_url"
+                          value={settings?.skyzone_waiver_url || ''}
+                          onChange={handleChange}
+                          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                          placeholder="https://www.skyzone.com/waiver"
+                        />
+                      </div>
+                      <p className="mt-2 text-sm text-gray-500">
+                        Enter the URL for the SkyZone waiver form that guests need to complete
+                      </p>
+                    </div>
                   </div>
                 </div>
 

@@ -21,6 +21,7 @@ interface PartyLocation {
   party_time?: string;
   party_end_time?: string;
   party_year?: string;
+  skyzone_waiver_url?: string;
 }
 
 interface PartyContextType {
@@ -113,7 +114,8 @@ export const PartyProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           party_date: data.party_date || '',
           party_time: data.party_time || '',
           party_end_time: data.party_end_time || '',
-          party_year: data.party_year || ''
+          party_year: data.party_year || '',
+          skyzone_waiver_url: data.skyzone_waiver_url || ''
         };
         console.log('Setting party location from DB:', validatedLocation);
         setPartyLocation(validatedLocation);

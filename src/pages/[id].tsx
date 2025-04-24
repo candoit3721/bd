@@ -17,16 +17,16 @@ function formatDateForCalendar(date: string, startTime: string, endTime: string)
   // Example input: "Saturday, June 7, 2025" "2:00 PM" "4:30 PM"
   // Parse the date
   const [, month, day, year] = date.match(/(\w+)\s+(\d+),\s+(\d+)/) || [];
-  
+
   // Convert to Date objects
   const startDate = new Date(`${month} ${day}, ${year} ${startTime}`);
   const endDate = new Date(`${month} ${day}, ${year} ${endTime}`);
-  
+
   // Format for Google Calendar (YYYYMMDDTHHMMSSZ)
   const formatToCalendarString = (d: Date) => {
     return d.toISOString().replace(/-|:|\.\d+/g, '');
   };
-  
+
   return `${formatToCalendarString(startDate)}/${formatToCalendarString(endDate)}`;
 }
 
@@ -41,6 +41,8 @@ export default function InvitationPage() {
   const [editingResponse, setEditingResponse] = useState(false);
   // We'll still keep this state for backward compatibility during refactoring
   const [partyLocation, setPartyLocation] = useState<any>(null);
+  // Track if this is a fresh acceptance to show the special confirmation message
+  const [justAccepted, setJustAccepted] = useState(false);
 
   // Get party details from context
   const { partyLocation: contextPartyLocation, partyDate, partyTime, partyEndTime } = useParty();
@@ -54,6 +56,18 @@ export default function InvitationPage() {
       fetchPartyLocation();
     }
   }, [id]);
+
+  // Reset justAccepted flag when component is mounted
+  useEffect(() => {
+    // This ensures the special confirmation message only shows right after accepting
+    const timer = setTimeout(() => {
+      if (justAccepted) {
+        setJustAccepted(false);
+      }
+    }, 5000); // Reset after 5 seconds to ensure user sees the message
+
+    return () => clearTimeout(timer);
+  }, [justAccepted]);
 
   async function fetchGuest(guestId: string) {
     setLoading(true);
@@ -182,21 +196,26 @@ export default function InvitationPage() {
         });
       }
 
-      // If accepting and don't have contact info, show contact form
-      if (status === 'ACCEPTED' && !guest?.email && !guest?.phone) {
+      // If accepting, always show contact form to allow updating contact info
+      if (status === 'ACCEPTED') {
         // Pre-populate contact fields if guest already has contact info
-        if (guest?.email) setContactEmail(guest.email);
-        if (guest?.phone) setContactPhone(guest.phone);
+        setContactEmail(guest?.email || '');
+        setContactPhone(guest?.phone || '');
         setShowContactForm(true);
       } else {
         setEditingResponse(false); // Reset editing state after successful update
       }
 
-      // Create confetti effect for accepted RSVPs
+      // Set justAccepted flag if the status is ACCEPTED
       if (status === 'ACCEPTED') {
+        setJustAccepted(true);
+
+        // Create confetti effect for accepted RSVPs
         setTimeout(() => {
           createConfetti();
         }, 300);
+      } else {
+        setJustAccepted(false);
       }
     } catch (error) {
       console.error('Error updating RSVP:', error);
@@ -233,6 +252,7 @@ export default function InvitationPage() {
       // Hide contact form
       setShowContactForm(false);
       setEditingResponse(false);
+      setJustAccepted(true); // Set the flag to show the special confirmation message
     } catch (error) {
       console.error('Error updating contact info:', error);
       alert('There was an error saving your contact information. Please try again.');
@@ -264,6 +284,7 @@ export default function InvitationPage() {
       setShowContactForm(false);
       setEditingResponse(false); // Make sure editing mode is off
       setRsvpStatus('ACCEPTED');
+      setJustAccepted(true); // Set the flag to show the special confirmation message
 
       // Create confetti effect
       setTimeout(() => {
@@ -374,23 +395,51 @@ export default function InvitationPage() {
                 {rsvpStatus === 'ACCEPTED' ? (
                   <div className="confirmation yes">
                     <i className="fas fa-check-circle"></i>
-                    <p>Awesome! We can't wait to see you!</p>
-                    <p className="secondary">{`We'll see you on ${partyDate}!`}</p>
-                    <a
-                      href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Sophia's+10th+Birthday+Party&dates=${encodeURIComponent(
-                        formatDateForCalendar(partyDate, partyTime, partyEndTime)
-                      )}&details=${encodeURIComponent(
-                        `Join us for Sophia's birthday celebration at ${contextPartyLocation?.venue_name}!`
-                      )}&location=${encodeURIComponent(
-                        `${contextPartyLocation?.venue_name}, ${contextPartyLocation?.address_line1}, ${contextPartyLocation?.city}, ${contextPartyLocation?.state} ${contextPartyLocation?.zip_code}`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="calendar-link"
-                    >
-                      <i className="fas fa-calendar-plus"></i>
-                      Add to Calendar
-                    </a>
+                    {justAccepted ? (
+                      <>
+                        <p>Awesome! Your spot is confirmed!</p>
+                        <p className="secondary">{`We look forward to celebrating with you on ${partyDate}.`}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p>Thank you for your RSVP!</p>
+                        <p className="secondary">{`We're excited to celebrate with you on ${partyDate}!`}</p>
+                      </>
+                    )}
+                    <div className="flex flex-col space-y-3 mt-4">
+                      <a
+                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Sophia's+10th+Birthday+Party&dates=${encodeURIComponent(
+                          formatDateForCalendar(partyDate, partyTime, partyEndTime)
+                        )}&details=${encodeURIComponent(
+                          `Join us for Sophia's birthday celebration at ${contextPartyLocation?.venue_name}!
+
+Friendly reminder: To save time on the day, please fill out the SkyZone waiver online before the party: ${contextPartyLocation?.skyzone_waiver_url || 'https://www.skyzone.com/waiver'}
+
+Location: ${contextPartyLocation?.venue_name}, ${contextPartyLocation?.address_line1}, ${contextPartyLocation?.city}, ${contextPartyLocation?.state} ${contextPartyLocation?.zip_code}
+                          `
+                        )}&location=${encodeURIComponent(
+                          `${contextPartyLocation?.venue_name}, ${contextPartyLocation?.address_line1}, ${contextPartyLocation?.city}, ${contextPartyLocation?.state} ${contextPartyLocation?.zip_code}`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="calendar-link"
+                      >
+                        <i className="fas fa-calendar-plus"></i>
+                        Add to Calendar
+                      </a>
+
+                      {contextPartyLocation?.skyzone_waiver_url && (
+                        <a
+                          href={contextPartyLocation.skyzone_waiver_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="waiver-link"
+                        >
+                          <i className="fas fa-file-signature"></i>
+                          Sign SkyZone Waiver
+                        </a>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div className="confirmation no">
@@ -400,16 +449,29 @@ export default function InvitationPage() {
                   </div>
                 )}
                 <div className="mt-6 text-center">
-                  <button
-                    onClick={() => {
-                      setEditingResponse(true);
-                      setShowContactForm(false);
-                    }}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-party-purple hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-party-purple transition-all duration-200"
-                  >
-                    <i className="fas fa-edit mr-2"></i>
-                    Change My Response
-                  </button>
+                  {rsvpStatus === 'ACCEPTED' ? (
+                    <button
+                      onClick={() => {
+                        setEditingResponse(true);
+                        setShowContactForm(false);
+                      }}
+                      className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-all duration-200"
+                    >
+                      <i className="fas fa-edit mr-2 text-gray-500"></i>
+                      Need to Update?
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setEditingResponse(true);
+                        setShowContactForm(false);
+                      }}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-party-purple hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-party-purple transition-all duration-200"
+                    >
+                      <i className="fas fa-edit mr-2"></i>
+                      Change My Response
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -418,7 +480,7 @@ export default function InvitationPage() {
             {showContactForm && (
               <div className="contact-form-section bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-6">
                 <h3 className="text-xl font-medium text-gray-800 mb-2">Contact Information</h3>
-                <p className="text-gray-600 mb-4">Please provide your contact information so we can reach you with any updates about the party.</p>
+                <p className="text-gray-600 mb-4">Would you like to provide or update your contact information? This helps us reach you with any party updates.</p>
 
                 <form onSubmit={handleContactSubmit} className="space-y-4">
                   <div>

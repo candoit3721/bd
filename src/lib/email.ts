@@ -159,12 +159,19 @@ This is an automated notification.
     console.log(`If you don't see the email, check your spam folder or email provider's filtering.`);
     console.log(`The email was sent from "${msg.from.name}" <${msg.from.email}> with subject "${msg.subject}"`);
     return true;
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error sending email notification with SendGrid:', error);
-    if (error.response) {
+    // Type guard to check if error has response property
+    if (error && typeof error === 'object' && 'response' in error) {
+      const sendGridError = error as {
+        response: {
+          body: unknown;
+          statusCode: number
+        }
+      };
       console.error('SendGrid API error response:', {
-        body: error.response.body,
-        statusCode: error.response.statusCode
+        body: sendGridError.response.body,
+        statusCode: sendGridError.response.statusCode
       });
     }
     return false;

@@ -36,22 +36,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('Test email sent successfully:', result);
 
     return res.status(200).json({ success: true, message: 'Test email sent successfully' });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error sending test email:', error);
-    if (error.response) {
-      console.error('SendGrid API error response:', {
-        body: error.response.body,
-        statusCode: error.response.statusCode
-      });
+
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorResponse = error &&
+      typeof error === 'object' &&
+      'response' in error &&
+      error.response &&
+      typeof error.response === 'object' &&
+      'body' in error.response &&
+      'statusCode' in error.response
+        ? {
+            body: error.response.body,
+            statusCode: error.response.statusCode as number
+          }
+        : null;
+
+    if (errorResponse) {
+      console.error('SendGrid API error response:', errorResponse);
     }
 
     return res.status(500).json({
       error: 'Failed to send test email',
-      details: error.message,
-      response: error.response ? {
-        body: error.response.body,
-        statusCode: error.response.statusCode
-      } : null
+      details: errorMessage,
+      response: errorResponse
     });
   }
 }
